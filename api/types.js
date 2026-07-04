@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
       const [rows] = await pool.query(
-        "SELECT * FROM types ORDER BY id DESC"
+        "SELECT * FROM VehicleType ORDER BY id DESC"
       );
 
       return res.status(200).json({
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       const { type, amount } = req.body;
 
       const sql = `
-        INSERT INTO types (type, amount)
+        INSERT INTO VehicleType (type, amount)
         VALUES (?, ?)
       `;
 
@@ -76,7 +76,7 @@ export default async function handler(req, res) {
       const { amount } = req.body;
 
       const sql = `
-        UPDATE types
+        UPDATE VehicleType
         SET amount = ?
         WHERE id = ?
       `;
