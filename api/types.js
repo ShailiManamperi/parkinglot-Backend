@@ -1,10 +1,10 @@
 import pool from "./db.js";
 
-const allowedOrigin = "https://parkinglotmanagementsystem.shailimanamperi2002.workers.dev";
+const allowedOrigin = "https://deparmentmanagementwebsite.shailimanamperi2002.workers.dev";
 
 function setCors(res) {
   res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
-  res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }
 
@@ -16,14 +16,36 @@ export default async function handler(req, res) {
   }
 
   // =====================
-  // POST ADD TYPE
+  // GET ALL TYPES
+  // =====================
+  if (req.method === "GET") {
+    try {
+      const [rows] = await pool.query(
+        "SELECT * FROM types ORDER BY id DESC"
+      );
+
+      return res.status(200).json({
+        success: true,
+        data: rows
+      });
+
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        error: err.message
+      });
+    }
+  }
+
+  // =====================
+  // CREATE TYPE
   // =====================
   if (req.method === "POST") {
     try {
       const { type, amount } = req.body;
 
       const sql = `
-        INSERT INTO VehicleType (type, amount)
+        INSERT INTO types (type, amount)
         VALUES (?, ?)
       `;
 
@@ -38,7 +60,6 @@ export default async function handler(req, res) {
       });
 
     } catch (err) {
-      console.error(err);
       return res.status(500).json({
         success: false,
         error: err.message
@@ -47,17 +68,23 @@ export default async function handler(req, res) {
   }
 
   // =====================
-  // GET ALL TYPES
+  // UPDATE TYPE
   // =====================
-  if (req.method === "GET") {
+  if (req.method === "PUT") {
     try {
-      const [rows] = await pool.query(
-        "SELECT * FROM VehicleType ORDER BY id DESC"
-      );
+      const id = req.query.id;
+      const { amount } = req.body;
+
+      const sql = `
+        UPDATE types
+        SET amount = ?
+        WHERE id = ?
+      `;
+
+      await pool.execute(sql, [amount, id]);
 
       return res.status(200).json({
-        success: true,
-        data: rows
+        success: true
       });
 
     } catch (err) {
