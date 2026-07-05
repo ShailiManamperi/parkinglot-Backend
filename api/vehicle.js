@@ -1,7 +1,24 @@
 import QRCode from "qrcode";
 import pool from "./db.js";
+const allowedOrigin = "https://parkinglotmanagementsystem.shailimanamperi2002.workers.dev";
 
-if(req.method==="POST"){
+function setCors(res) {
+  res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
+  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+}
+
+export default async function handler(req, res) {
+  setCors(res);
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  // =====================
+  // GET ALL TYPES
+  // =====================
+  if(req.method==="POST"){
 
     try{
 
@@ -70,3 +87,7 @@ if(req.method==="POST"){
     }
 
 }
+
+  return res.status(405).json({ message: "Method Not Allowed" });
+}
+
