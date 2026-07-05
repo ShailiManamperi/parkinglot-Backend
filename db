@@ -9,3 +9,16 @@ CREATE TABLE VehicleType (
     type VARCHAR(255),
     amount INT
 );
+CREATE TABLE Vehicle(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    vehicleNo VARCHAR(30),
+    ownerName VARCHAR(100),
+    contact VARCHAR(20),
+    nic VARCHAR(20),
+    VehicleType INT,
+    paymentType VARCHAR(20),
+    qrCode TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(VehicleType)
+    REFERENCES VehicleType(id)
+);
